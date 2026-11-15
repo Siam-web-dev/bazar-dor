@@ -82,9 +82,9 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Dan pash */}
+        
         {isPending ? (
-          // Session load hocche, tai skeleton dekhai
+          
           <div className="h-9 w-28 animate-pulse rounded-lg bg-gray-100" />
         ) : !user ? (
           <div className="flex items-center gap-2">
