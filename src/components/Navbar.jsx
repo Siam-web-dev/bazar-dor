@@ -2,26 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ShoppingCart, User, LogOut, ChevronDown } from "lucide-react";
-// import { authClient } from "@/lib/auth-client";
 import { useSession, signOut } from "@/lib/auth-client"; // path ta tomar project onujayi thik koro
-
-const categories = [
-  { name: "চাল", href: "/category/rice", icon: "🍚" },
-  { name: "ডাল", href: "/category/dal", icon: "🫘" },
-  { name: "তেল", href: "/category/oil", icon: "🛢️" },
-  { name: "সবজি", href: "/category/vegetables", icon: "🥬" },
-  { name: "মাছ", href: "/category/fish", icon: "🐟" },
-  { name: "মাংস", href: "/category/meat", icon: "🍗" },
-  { name: "ডিম-দুধ", href: "/category/egg-milk", icon: "🥛" },
-  { name: "মসলা", href: "/category/spices", icon: "🌶️" },
-];
 
 export default function Navbar() {
   const router = useRouter();
-
-  // Better Auth er hook: SessionProvider lagbe na
+  const [categories, setCategories] = useState([]);
+  const pathname = usePathname();
+ 
   const { data: session, isPending } = useSession();
   const user = session?.user ?? null;
 
@@ -29,7 +18,16 @@ export default function Navbar() {
   const [today, setToday] = useState("");
   const menuRef = useRef(null);
 
-  // Bangla tarikh
+  // data fetching
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`);
+      const data = await res.json();
+      setCategories(data);
+    };
+    fetchCategories();
+  }, []);
+
   useEffect(() => {
     setToday(
       new Date().toLocaleDateString("bn-BD", {
@@ -37,11 +35,10 @@ export default function Navbar() {
         day: "numeric",
         month: "long",
         year: "numeric",
-      })
+      }),
     );
   }, []);
 
-  // Baire click korle dropdown bondho
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -82,9 +79,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        
         {isPending ? (
-          
           <div className="h-9 w-28 animate-pulse rounded-lg bg-gray-100" />
         ) : !user ? (
           <div className="flex items-center gap-2">
@@ -153,7 +148,6 @@ export default function Navbar() {
                   <User size={16} />
                   আমার প্রোফাইল
                 </Link>
-                
 
                 <button
                   role="menuitem"
@@ -170,20 +164,25 @@ export default function Navbar() {
       </div>
 
       {/* Category bar */}
-      <nav className="border-t border-gray-100">
-        <ul className="mx-auto flex max-w-7xl gap-6 overflow-x-auto px-4 py-3 sm:px-6">
-          {categories.map((cat) => (
-            <li key={cat.href} className="shrink-0">
-              <Link
-                href={cat.href}
-                className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-green-700"
-              >
-                <span aria-hidden>{cat.icon}</span>
-                {cat.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
+      <nav className="mx-auto flex max-w-7xl gap-6 overflow-x-auto px-4 py-3 sm:px-6">
+        {categories.map((cat) => {
+          const isActive =
+            pathname === `/${cat.slug}` ||
+            pathname === `/categories/${cat.slug}`;
+
+          return (
+            <Link
+              key={cat.id}
+              href={`/category/${cat.slug}`}
+              className={isActive ? "text-green-600" : "text-gray-600"}
+            >
+              <div className="space-x-5">
+                {cat.icon}
+                {cat.nameBn}
+              </div>
+            </Link>
+          );
+        })}
       </nav>
     </header>
   );
