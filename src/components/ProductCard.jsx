@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const unitBn = {
   kg: "প্রতি কেজি",
-  dozen: "প্রতি ডজন",
+  dozon: "প্রতি ডজন",
   piece: "প্রতি পিস",
   litre: "প্রতি লিটার",
 };
@@ -10,13 +10,13 @@ const toBn = (num) =>
   Number(num).toLocaleString("bn-BD", { maximumFractionDigits: 1 });
 
 const ProductCard = ({ product }) => {
-  const { nameBn, image, unit, today, change, slug } = product;
+  const { nameBn, image, unit, today, change, id } = product;
 
   const isUp = change.dir === "up";
 
   return (
     <div>
-      <Link href={`/products/${slug}`}>
+      <Link href={`/product/${id}`}>
         <div className="rounded-2xl border border-green-100 bg-white p-4 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 text-2xl">

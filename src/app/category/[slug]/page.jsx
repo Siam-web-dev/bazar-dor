@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import ProductCard from "@/components/ProductCard";
 import CategoryProducts from "@/components/CategoryProducts";
 
-const API = "https://openapi.programming-hero.com/api/bazardor";
+
 
 const toBn = (num) => Number(num).toLocaleString("bn-BD");
 
@@ -11,8 +11,8 @@ const CategoryContent = async ({ params }) => {
 
   // category info ar oi category r product, duto ekshathe fetch
   const [catRes, prodRes] = await Promise.all([
-    fetch(`${API}/categories`),
-    fetch(`${API}/products?category=${slug}`),
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`),
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/products?category=${slug}`),
   ]);
 
   const categories = await catRes.json();
