@@ -29,7 +29,7 @@ const MarqueeLine = () => {
             return (
                 <Link 
                 key={item.id}
-                href={`/products/${item.slag}`}
+                href={`/product/${item.slag}`}
                 className="flex items-center gap-2 mx-3 px-3 py-1"
                 >
                  <span> {item.image} </span>
