@@ -1,8 +1,7 @@
 import { Suspense } from "react";
 import ProductCard from "@/components/ProductCard";
 import CategoryProducts from "@/components/CategoryProducts";
-
-
+import { Spinner } from "@heroui/react";
 
 const toBn = (num) => Number(num).toLocaleString("bn-BD");
 
@@ -27,31 +26,36 @@ const CategoryContent = async ({ params }) => {
   const category = categoryList.find((c) => c.slug === slug || c.id === slug);
 
   return (
-    
-      
-      <section className="mx-auto mt-8 w-full max-w-6xl px-4">
-        {/* Category heading (ager moto, kono change nai) */}
-        <div className="mb-6 flex items-center gap-4 rounded-2xl border border-green-100 bg-white p-6 shadow-sm">
-          <span className="text-5xl">{category?.icon}</span>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              {category?.nameBn || slug}
-            </h1>
-            <p className="text-sm text-gray-500">
-              {toBn(productList.length)}টি পণ্যের আজকের দাম ও পরিবর্তন
-            </p>
-          </div>
+    <section className="mx-auto mt-8 w-full max-w-6xl px-4">
+      {/* Category heading (ager moto, kono change nai) */}
+      <div className="mb-6 flex items-center gap-4 rounded-2xl border border-green-100 bg-white p-6 shadow-sm">
+        <span className="text-5xl">{category?.icon}</span>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">
+            {category?.nameBn || slug}
+          </h1>
+          <p className="text-sm text-gray-500">
+            {toBn(productList.length)}টি পণ্যের আজকের দাম ও পরিবর্তন
+          </p>
         </div>
+      </div>
 
-        {/* Sort + product list */}
-        <CategoryProducts products={productList} />
-      </section>
+      {/* Sort + product list */}
+      <CategoryProducts products={productList} />
+    </section>
   );
 };
 
 const CategoryDetailsPage = ({ params }) => {
   return (
-    <Suspense fallback={<p className="mt-10 text-center">Loading...</p>}>
+    <Suspense
+      fallback={
+        <div className="flex flex-col items-center gap-2">
+          <Spinner size="xl" />
+          <span className="text-xs text-muted">Loading...</span>
+        </div>
+      }
+    >
       <CategoryContent params={params} />
     </Suspense>
   );

@@ -4,6 +4,8 @@ import { Toaster } from "react-hot-toast";
 import Navbar from "@/components/Navbar";
 import MarqueeLine from "@/components/MarqueeLine";
 import Footer from "@/components/Footer";
+import { Spinner } from "@heroui/react";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,12 +30,19 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-      <Navbar></Navbar> 
-      <MarqueeLine></MarqueeLine>
-      <main>
-         {children}
-      </main>
-      <Footer></Footer>
+        <Suspense
+          fallback={
+            <div className="flex flex-col items-center gap-2">
+              <Spinner size="xl" />
+              <span className="text-xs text-muted">Loading...</span>
+            </div>
+          }
+        >
+          <Navbar />
+        </Suspense>
+        <MarqueeLine></MarqueeLine>
+        <main>{children}</main>
+        <Footer></Footer>
         <Toaster></Toaster>
       </body>
     </html>
